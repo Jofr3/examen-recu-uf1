@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Document</title>
+    <style>
+        #main {
+            height: 200px;
+            width: 600px; /*50%;*/
+            background-color: navy;
+            color: white;
+            border: 10px solid black;
+            margin: 0 auto;
+            /* margin-top: 100px;*/
+        }
+
+        #buttons {
+            width: 150px; /*50%;*/
+            /*height: 50px;/*50%;*/
+            margin: 0 auto;
+            padding: 2em;
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <!--h1>Click "Get Info" to provide your details</h1-->
+
+    <h1>Hi, "your full name goes here"!!!</h1>
+    <p>You were born on <strong>"Your birth date goes here"</strong></p>
+    <p>That day was <strong>"The date of week goes here"</strong></p>
+    <p>And untill now, you have had <strong>"n"</strong> birthdays on that day of week</p>
+
+
+</div>
+<div id="buttons">
+    <input type="button" onclick="loadWindow()" value="Get Info">
+    <input type="button" onclick="refreshWindow()" value="Refresh">
+
+</div>
+<script>
+    addEventListener("load", () => {
+        let main = document.getElementById('main');
+        let cookies = document.cookie;
+        if (cookies) {
+            let birthDate = getCookieValue(cookies, 'birthDate');
+            let name = getCookieValue(cookies, 'name');
+            let surname = getCookieValue(cookies, 'surname');
+
+            main.children[3].remove();
+            main.children[2].remove();
+            main.children[1].remove();
+            main.children[0].remove();
+
+            let diaFull = new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(new Date(birthDate));
+            let dia = diaFull.split(',');
+
+            let any = birthDate.split('-');
+            let anyInt = parseInt(any[0]);
+
+            let anys = 2022 - anyInt;
+
+            let counter = 0;
+            for (let i = 0; i < anys; i++) {
+                let a = (anyInt + i) + '-' + any[1] + '-' + any[2];
+                let b = new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(new Date(a));
+                let c = b.split(',');
+                if (c[0] === dia[0]) {
+                    counter++;
+                }
+            }
+
+            let d1 = new Date(new Date().getFullYear()+'-'+any[1]+'-'+any[2]);
+            let d2 = new Date(new Date().getFullYear()+'-01-01');
+            if(d1 > d2){
+                let b = new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(new Date(d1));
+                let c = b.split(',');
+                if (c[0] === dia[0]) {
+                    counter++;
+                }
+            }
+
+            let h1 = document.createElement('h1');
+            let p1 = document.createElement('p');
+            let p2 = document.createElement('p');
+            let p3 = document.createElement('p');
+
+            h1.innerText = `Hi, ${name} ${surname}!!!`;
+            p1.innerHTML = `You were born on <strong>${birthDate}</strong>`
+            p2.innerHTML = `That day was <strong>${dia[0]}</strong>`
+            p3.innerHTML = `And until now, you have had <strong>${counter}</strong> birthdays on that day of week`
+
+            main.appendChild(h1);
+            main.appendChild(p1);
+            main.appendChild(p2);
+            main.appendChild(p3);
+        } else {
+            main.children[3].remove();
+            main.children[2].remove();
+            main.children[1].remove();
+            main.children[0].remove();
+
+            let h2 = document.createElement('h2');
+            h2.innerText = "Click 'Get info' to provide your details"
+            main.appendChild(h2);
+        }
+    })
+
+    const getCookieValue = (cookieStr, cookieName) => {
+        let name = cookieName + "=";
+        let ca = cookieStr.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+
+    const loadWindow = () => {
+        window.location = 'Secondary.html';
+    }
+
+    const refreshWindow = () => {
+        window.location.reload();
+    }
+
+
+</script>
+
+</body>
+</html>
